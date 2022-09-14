@@ -8,9 +8,24 @@
 #   https://opensource.org/licenses/BSD-3-Clause
 
 
-CFLAGS = -g -I.
+.PHONY: all
+all: vmshell test-nn-xor
 
-vpath %.c nn:tests
+CFLAGS = -g -I. -Iaseba -Ithymio
+CXXFLAGS = -g -I. -Iaseba
+
+vpath %.c aseba/vm:aseba/transport/buffer:aseba/compiler:thymio:nn:tests
+vpath %.cpp aseba/vm:aseba/compiler:aseba/common/utils:aseba/common/msg:thymio
+
+vmobj = vm.o vm-buffer.o
+vmnnobj = nn.o nn-alloc-stdlib.o nn-descriptions.o nn-natives.o
+compobj = analysis.o compiler.o errors.o identifier-lookup.o lexer.o parser.o tree-build.o tree-dump.o tree-expand.o tree-emit.o tree-optimize.o tree-typecheck.o utils.o FormatableString.o TargetDescription.o
+
+vmshell: vmshell.o compHelper.o disassembler.o $(vmobj) $(compobj) $(vmnnobj)
+	$(CXX) -g -o $@ $^
+
+disassembler.o: disassembler.cpp
+	$(CXX) $(CXXFLAGS) -DUSE_COMPILER -c -o $@ $<
 
 test-nn-xor: nn.o nn-alloc-stdlib.o xor.o
 	$(CC) -g -o $@ $^ -lm
