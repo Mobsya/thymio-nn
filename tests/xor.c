@@ -51,6 +51,7 @@ int main() {
 	NN nn = { 0, 0, 0, 0, 0 };   // empty
 	NNBackProp bp = { 0, 0, 0, 0, 0, 0 };	// empty
 	int nnSize[] = {2, 3, 1};
+	NNActivation activation = NNActivationTanh;
 	int nnLayerCount = sizeof(nnSize) / sizeof(int) - 1;
 	int maxIter = 2000;
 	void *backpropTempMem = 0;
@@ -65,7 +66,7 @@ int main() {
 
 	NNReset(&nn, nnLayerCount);
 	for (int k = 0; k < nnLayerCount; k++) {
-		NNAddLayer(&nn, nnSize[k], nnSize[k + 1], NNActivationTanh);
+		NNAddLayer(&nn, nnSize[k], nnSize[k + 1], activation);
 	}
 
 	NNInitWeights(&nn);

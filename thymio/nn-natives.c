@@ -72,7 +72,9 @@ void NN_nninit(AsebaVMState *vm) {
 
     if (!NNReset(&nn, sizeLength - 1))
         return; // error
-    NNActivation activation = activationCode == 1 ? NNActivationTanh : NNActivationNoop;
+    NNActivation activation = activationCode == 1 ? NNActivationTanh
+		: activationCode == 2 ? NNActivationSigmoid
+		: NNActivationNoop;
     for (int i = 0; i < sizeLength - 1; i++) {
         if (!NNAddLayer(&nn,
             vm->variables[sizeAddr + i],

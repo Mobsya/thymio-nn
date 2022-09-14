@@ -1,12 +1,12 @@
 /*
-    Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
-    Miniature Mobile Robots group, Switzerland
-    Author: Yves Piguet
+	Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
+	Miniature Mobile Robots group, Switzerland
+	Author: Yves Piguet
 
-    Licensed under the 3-Clause BSD License;
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    https://opensource.org/licenses/BSD-3-Clause
+	Licensed under the 3-Clause BSD License;
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	https://opensource.org/licenses/BSD-3-Clause
 */
 
 #ifndef __NN_H
@@ -19,27 +19,28 @@ extern "C" {
 typedef float NNFloat;
 
 typedef enum {
-    NNActivationNoop = 0,
-    NNActivationTanh
+	NNActivationNoop = 0,
+	NNActivationTanh,
+	NNActivationSigmoid
 } NNActivation;
 
 typedef struct {
-    int inputCount;
-    int outputCount;
-    NNActivation activation;
-    NNFloat *data;  // block of data for w, b, input, output
-    NNFloat *W; // W[i * inputCount + j] between input j and output i
-    NNFloat *B;
-    NNFloat *input; // or NULL for output of previous layer
-    NNFloat *output;
+	int inputCount;
+	int outputCount;
+	NNActivation activation;
+	NNFloat *data;  // block of data for w, b, input, output
+	NNFloat *W; // W[i * inputCount + j] between input j and output i
+	NNFloat *B;
+	NNFloat *input; // or NULL for output of previous layer
+	NNFloat *output;
 } NNLayer;
 
 typedef struct {
-    int maxLayerCount;
-    int layerCount;
+	int maxLayerCount;
+	int layerCount;
 	int inputCount;
 	int outputCount;
-    NNLayer *layer;
+	NNLayer *layer;
 } NN;
 
 typedef struct {

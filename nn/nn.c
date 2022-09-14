@@ -1,12 +1,12 @@
 /*
-    Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
-    Miniature Mobile Robots group, Switzerland
-    Author: Yves Piguet
+	Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
+	Miniature Mobile Robots group, Switzerland
+	Author: Yves Piguet
 
-    Licensed under the 3-Clause BSD License;
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    https://opensource.org/licenses/BSD-3-Clause
+	Licensed under the 3-Clause BSD License;
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	https://opensource.org/licenses/BSD-3-Clause
 */
 
 #include "nn.h"
@@ -16,9 +16,9 @@
 // uniform pseudorandom number between - and + amplitude
 static NNFloat prand(NNFloat amplitude) {
 #ifdef __linux__
-    return (random() - 0x40000000l) * (amplitude / 0x40000000);
+	return (random() - 0x40000000l) * (amplitude / 0x40000000);
 #else
-    return (int32_t)(arc4random() ^ 0x80000000) * (amplitude / 0x80000000);
+	return (int32_t)(arc4random() ^ 0x80000000) * (amplitude / 0x80000000);
 #endif
 }
 
@@ -45,6 +45,11 @@ static NNFloat tanhder(NNFloat p) {
 	return 1 - tanhp * tanhp;
 }
 
+static NNFloat sigmoidder(NNFloat p) {
+	NNFloat sigmoid = (1 + tanh(p / 2)) / 2;
+	return sigmoid * (1 - sigmoid);
+}
+
 NNFloat *NNGetInputPtr(NN const *nn) {
 	NNLayer *layerFirst = &nn->layer[0];
 	return layerFirst->input;
@@ -56,50 +61,54 @@ NNFloat *NNGetOutputPtr(NN const *nn) {
 }
 
 void NNClearWeights(NN *nn) {
-    for (int k = 0; k < nn->layerCount; k++) {
-        for (int i = 0; i < nn->layer[k].inputCount * nn->layer[k].outputCount; i++) {
-            nn->layer[k].W[i] = 0;
-        }
-        for (int i = 0; i < nn->layer[k].outputCount; i++) {
-            nn->layer[k].B[i] = 0;
-        }
-    }
+	for (int k = 0; k < nn->layerCount; k++) {
+		for (int i = 0; i < nn->layer[k].inputCount * nn->layer[k].outputCount; i++) {
+			nn->layer[k].W[i] = 0;
+		}
+		for (int i = 0; i < nn->layer[k].outputCount; i++) {
+			nn->layer[k].B[i] = 0;
+		}
+	}
 }
 
 void NNInitWeights(NN *nn) {
-    for (int k = 0; k < nn->layerCount; k++) {
-        NNFloat amplitude = 1 / sqrt(nn->layer[k].inputCount);
-        for (int i = 0; i < nn->layer[k].inputCount * nn->layer[k].outputCount; i++) {
-            nn->layer[k].W[i] = prand(amplitude);
-        }
-        for (int i = 0; i < nn->layer[k].outputCount; i++) {
-            nn->layer[k].B[i] = 0;
-        }
-    }
+	for (int k = 0; k < nn->layerCount; k++) {
+		NNFloat amplitude = 1 / sqrt(nn->layer[k].inputCount);
+		for (int i = 0; i < nn->layer[k].inputCount * nn->layer[k].outputCount; i++) {
+			nn->layer[k].W[i] = prand(amplitude);
+		}
+		for (int i = 0; i < nn->layer[k].outputCount; i++) {
+			nn->layer[k].B[i] = 0;
+		}
+	}
 }
 
 void NNEval(NN *nn, NNFloat **P) {
-    for (int k = 0; k < nn->layerCount; k++) {
-        NNLayer *layer = &nn->layer[k];
-        NNFloat const *input = k == 0 ? layer->input : nn->layer[k - 1].output;
-        for (int i = 0; i < layer->outputCount; i++) {
-            NNFloat p = layer->B[i];
-            for (int j = 0; j < layer->inputCount; j++) {
-                p += layer->W[i * layer->inputCount + j] * input[j];
-            }
+	for (int k = 0; k < nn->layerCount; k++) {
+		NNLayer *layer = &nn->layer[k];
+		NNFloat const *input = k == 0 ? layer->input : nn->layer[k - 1].output;
+		for (int i = 0; i < layer->outputCount; i++) {
+			NNFloat p = layer->B[i];
+			for (int j = 0; j < layer->inputCount; j++) {
+				p += layer->W[i * layer->inputCount + j] * input[j];
+			}
 			if (P) {
 				P[k][i] = p;
 			}
-            switch (layer->activation) {
-            case NNActivationTanh:
-                p = tanh(p);
-                break;
-            default:
-                break;
-            }
-            layer->output[i] = p;
-        }
-    }
+			switch (layer->activation) {
+			case NNActivationTanh:
+				p = tanh(p);
+				break;
+			case NNActivationSigmoid:
+				p = (1 + tanh(p / 2)) / 2;
+				break;
+			case NNActivationNoop:
+			default:
+				break;
+			}
+			layer->output[i] = p;
+		}
+	}
 }
 
 void NNHebbianRuleStep(NN *nn, int layerIndex, NNFloat alpha) {
@@ -206,6 +215,11 @@ void NNBackPropAddGradients(NN *nn, NNBackProp *bp) {
 				bp->Bg[k][i] = bp->E[i] * tanhder(bp->P[k][i]);
 			}
 			break;
+		case NNActivationSigmoid:
+			for (int i = 0; i < layer->outputCount; i++) {
+				bp->Bg[k][i] = bp->E[i] * sigmoidder(bp->P[k][i]);
+			}
+			break;
 		case NNActivationNoop:
 		default:
 			// phi' = 1
@@ -217,7 +231,7 @@ void NNBackPropAddGradients(NN *nn, NNBackProp *bp) {
 
 		// Wg = Bg * U'
 		// (matrix, same size as W: outputCount rows, inputCount columns)
-        NNFloat const *input = k == 0 ? layer->input : nn->layer[k - 1].output;
+		NNFloat const *input = k == 0 ? layer->input : nn->layer[k - 1].output;
 		for (int i = 0; i < layer->outputCount; i++) {
 			for (int j = 0; j < layer->inputCount; j++) {
 				bp->Wg[k][i * layer->inputCount + j] = bp->Bg[k][i] * input[j];
