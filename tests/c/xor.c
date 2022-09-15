@@ -9,7 +9,7 @@
     https://opensource.org/licenses/BSD-3-Clause
 */
 
-// test of nn implementation: learning of xor function
+// test of nn implementation: learning of xor function with backpropagation
 
 #include "nn/nn.h"
 #include "nn/nn-alloc.h"
