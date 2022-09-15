@@ -259,3 +259,14 @@ void NNBackPropApply(NN *nn, NNBackProp *bp, NNFloat eta) {
 			nn->layer[k].outputCount * nn->layer[k].inputCount, eta);
 	}
 }
+
+void NNObservationGetPtr(NNObservations *obs, int i,
+	NNFloat **input, NNFloat **output)
+{
+	if (i > obs->maxObsCount) {
+		*input = 0;
+		*output = 0;
+	}
+	*input = &obs->data[i * (obs->inputCount + obs->outputCount)];
+	*output = *input + obs->inputCount;
+}

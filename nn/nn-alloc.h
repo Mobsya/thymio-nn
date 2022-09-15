@@ -26,6 +26,10 @@ int NNAddLayer(NN *nn,
 // alloc temporary storage for back propagation, or deallocate if nn is NULL
 int NNBackPropAllocStorage(NN *nn, void **backpropTempMem);
 
+// initialize observation (alloc if maxObsCount > 0, else dealloc)
+int NNObservationsInit(NNObservations *obs, int inputCount, int outputCount,
+	int maxObsCount);
+
 #if defined(__cplusplus)
 }
 #endif

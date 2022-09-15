@@ -92,3 +92,23 @@ int NNBackPropAllocStorage(NN *nn, void **backpropTempMem) {
 	}
 	return 1;
 }
+
+int NNObservationsInit(NNObservations *obs, int inputCount, int outputCount,
+	int maxObsCount) {
+	if (obs->data) {
+		free((void *)obs->data);
+		obs->data = NULL;
+		obs->maxObsCount = 0;
+	}
+	if (outputCount > 0) {
+		obs->data = malloc((inputCount + outputCount) * maxObsCount * sizeof(NNFloat));
+		if (!obs->data) {
+			return 0;
+		}
+		obs->maxObsCount = maxObsCount;
+		obs->obsCount = 0;
+		obs->inputCount = inputCount;
+		obs->outputCount = outputCount;
+	}
+	return 1;
+}

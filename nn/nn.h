@@ -52,6 +52,14 @@ typedef struct {
 	NNFloat **Bg;	// Bg[i] = offset gradient
 } NNBackProp;
 
+typedef struct {
+	int maxObsCount;
+	int obsCount;
+	int inputCount;
+	int outputCount;
+	NNFloat *data;	// block of data for input and output data
+} NNObservations;
+
 // get address of nn inputs
 NNFloat *NNGetInputPtr(NN const *nn);
 
@@ -89,6 +97,10 @@ void NNBackPropAddGradients(NN *nn, NNBackProp *bp);
 // apply one step of back propagation using gradients obtained by
 // NNResetBackProp and NNAddGradients
 void NNBackPropApply(NN *nn, NNBackProp *bp, NNFloat eta);
+
+// get address of input and output vectors of an observation
+void NNObservationGetPtr(NNObservations *obs, int i,
+	NNFloat **input, NNFloat **output);
 
 #if defined(__cplusplus)
 }
