@@ -177,6 +177,27 @@ int main(int argc, char **argv)
 			srcCode = argv[++i];
 		else if (strcmp(argv[i], "--abo") == 0 && i + 1 < argc)
 			aboPath = argv[++i];
+		else if (strcmp(argv[i], "--info") == 0)
+		{
+			setupVM(&vm, 1024, 1024, 1024);
+			printf("bytecodeSize: %d\n", vm.bytecodeSize);
+			printf("variablesSize: %d\n", vm.variablesSize);
+			printf("stackSize: %d\n", vm.stackSize);
+
+			printf("\nNative functions:\n");
+			const AsebaNativeFunctionDescription * const *natfun
+				= AsebaGetNativeFunctionsDescriptions(&vm);
+			for (int i = 0; natfun[i]; i++)
+			{
+				printf("%s\n", natfun[i]->name);
+				printf("%s\n", natfun[i]->doc);
+				for (int j = 0; natfun[i]->arguments[j].size; j++)
+					printf("  %s [%d]\n",
+						natfun[i]->arguments[j].name, natfun[i]->arguments[j].size);
+			}
+
+			exit(0);
+		}
 		else
 		{
 			printf(
@@ -186,6 +207,7 @@ int main(int argc, char **argv)
 				"  --code 'code' compile, load and execute Aseba source code\n"
 				"  --dis         show disassembly code before executing it\n"
 				"  --help        display this message and exit\n"
+				"  --info        display information about node\n"
 				"  --out file    output file bytecode is written to\n"
 				"  --src file    compile, load and execute Aseba source code\n"
 				, argv[0]);
