@@ -1,0 +1,26 @@
+var wnum[4]
+var wden[4]
+var bnum[2]
+var bden[2]
+
+call nn.init([2, 2], 0)
+call nn.getweights(0, wnum, wden)
+call nn.getoffsets(0, bnum, bden)
+
+call test.display(wnum)
+call test.display(wden)
+call test.display(bnum)
+call test.display(bden)
+
+# param get/set
+# internally, parameters are stored as floating-point numbers, not as
+# separate num and den; hence fraction reduction should be expected
+call nn.setweights(0, [1, 2, 3, 4], [5, 6, 7, 8])
+call nn.setoffsets(0, [9, 10], [11, 12])
+call nn.getweights(0, wnum, wden)
+call nn.getoffsets(0, bnum, bden)
+
+call test.display(wnum)
+call test.display(wden)
+call test.display(bnum)
+call test.display(bden)

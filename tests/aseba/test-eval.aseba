@@ -1,0 +1,13 @@
+var y[2]
+
+call nn.init([2, 2], 0)
+
+call nn.setweights(0, [1, 2, 3, 4], [5, 6, 7, 8])
+call nn.setoffsets(0, [9, 10], [11, 12])
+call nn.setinputs([13, 17])
+call nn.eval()
+call nn.getoutputs(y)
+
+# 1/5 * 13 + 2/6 * 17 + 9/11 = 9.0848
+# 3/7 * 13 + 4/8 * 17 + 10/12 = 14.9048
+call test.display(y)
