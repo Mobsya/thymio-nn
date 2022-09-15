@@ -64,22 +64,22 @@ static void fractionApprox(NNFloat x, int16_t *num, int16_t *den) {
     }
 }
 
-// nn.init([n1, n2, ...], activationCode)
+// nn.init(inputCount, [outputCount1, outputCount2, ...], [activationCode1, activationCode2, ...])
 void NN_nninit(AsebaVMState *vm) {
-    uint16_t const sizeAddr = AsebaNativePopArg(vm);
-    uint16_t const activationCode = vm->variables[AsebaNativePopArg(vm)];
-    uint16_t const sizeLength = AsebaNativePopArg(vm);
+    uint16_t const inputCount = vm->variables[AsebaNativePopArg(vm)];
+    uint16_t const outputCountAddr = AsebaNativePopArg(vm);
+    uint16_t const activationCodeAddr = AsebaNativePopArg(vm);
+    uint16_t const layerCount = AsebaNativePopArg(vm);
 
-    if (!NNReset(&nn, sizeLength - 1))
+    if (!NNReset(&nn, layerCount))
         return; // error
-    NNActivation activation = activationCode == 1 ? NNActivationTanh
-		: activationCode == 2 ? NNActivationSigmoid
-		: NNActivationNoop;
-    for (int i = 0; i < sizeLength - 1; i++) {
+    for (int i = 0; i < layerCount; i++) {
         if (!NNAddLayer(&nn,
-            vm->variables[sizeAddr + i],
-            vm->variables[sizeAddr + i + 1],
-            activation)) {
+            i == 0 ? inputCount : vm->variables[outputCountAddr + i - 1],
+            vm->variables[outputCountAddr + i],
+            vm->variables[activationCodeAddr + i] == 1 ? NNActivationTanh
+				: vm->variables[activationCodeAddr + i] == 2 ? NNActivationSigmoid
+				: NNActivationNoop)) {
             return; // error
         }
     }

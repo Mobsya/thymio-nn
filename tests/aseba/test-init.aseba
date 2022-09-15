@@ -3,7 +3,7 @@ var wden[4]
 var bnum[2]
 var bden[2]
 
-call nn.init([2, 2], 0)
+call nn.init(2, 2, 0)
 call nn.getweights(0, wnum, wden)
 call nn.getoffsets(0, bnum, bden)
 

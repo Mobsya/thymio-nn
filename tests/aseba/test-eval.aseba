@@ -1,6 +1,8 @@
 var y[2]
 
-call nn.init([2, 2], 0)
+# 1 layer, 2 inputs, 2 neurons (2 outputs)
+
+call nn.init(2, 2, 0)
 
 call nn.setweights(0, [1, 2, 3, 4], [5, 6, 7, 8])
 call nn.setoffsets(0, [9, 10], [11, 12])
@@ -11,3 +13,23 @@ call nn.getoutputs(y)
 # 1/5 * 13 + 2/6 * 17 + 9/11 = 9.0848
 # 3/7 * 13 + 4/8 * 17 + 10/12 = 14.9048
 call test.display(y)
+
+# 2 layers, 2 inputs, [3, 1] neurons (1 output)
+
+call nn.init(2, [3, 1], [1, 0])
+
+call nn.setweights(0, [-1, 2, -3, 4, -5, 6], [7, 8, 9, 10, 11, 12])
+call nn.setoffsets(0, [13, 14, 15], [16, 17, 18])
+call nn.setweights(1, [1000, -200, -300], [1, 1, 1])
+call nn.setoffsets(1, [7], [8])
+call nn.setinputs([10, 3])
+call nn.eval()
+call nn.getoutputs(y)  # one output, only y[0] is set
+
+# layer 0:
+# tanh(-1/7 * 10 + 2/8 * 3 + 13/16) = 0.1331
+# tanh(-3/9 * 10 + 4/10 * 3 + 14/17) = -0.8642
+# tanh(-5/11 * 10 + 6/12 * 3 + 15/18) = -0.9763
+# layer 1:
+# 1000 * 0.1331 + -200 * -0.8642 + -300 * -0.9763 = 598.83
+call test.display(y[0])

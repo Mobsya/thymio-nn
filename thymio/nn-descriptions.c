@@ -18,8 +18,9 @@ AsebaNativeFunctionDescription NNNativeDescription_nninit = {
     "nn.init",
     "Initialize neural network",
     {
-        {-1, "size"},
-        {1, "tanh"},
+        {1, "nn number of inputs"},
+        {-1, "number of outputs for each layer"},
+        {-1, "activation function for each layer (0=identity, 1=tanh, 2=sigmoid)"},
         {0, NULL}
     }
 };
