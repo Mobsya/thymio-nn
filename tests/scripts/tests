@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -f
+
+python3 tests/scripts/testsim.py tests/aseba/test-eval.aseba tests/aseba/test-eval.expected-output
