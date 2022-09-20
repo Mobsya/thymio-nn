@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #define maxLineLength 1024
 
@@ -81,6 +82,7 @@ int main(int argc, char **argv) {
 	void *backpropTempMem = 0;
 	char const *trainingDatasetPath = NULL;
 	char const *validationDatasetPath = NULL;
+	NNFloat errormax = -1;	// default: no check
 	int obsCount = 0;
 	int verbose = 0;
 	int quiet = 0;
@@ -100,7 +102,9 @@ int main(int argc, char **argv) {
 
 	int nextLayerInputCount = inputCount;
 	for (int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "--eta") == 0 && i + 1 < argc) {
+		if (strcmp(argv[i], "--errormax") == 0 && i + 1 < argc) {
+			errormax = strtod(argv[++i], NULL);
+		} else if (strcmp(argv[i], "--eta") == 0 && i + 1 < argc) {
 			eta = strtod(argv[++i], NULL);
 		} else if (strcmp(argv[i], "--input") == 0 && i + 1 < argc) {
 			i++;	// already parsed
@@ -132,6 +136,8 @@ int main(int argc, char **argv) {
 			printf("Usage: %s [options]\n"
 				"\n"
 				"Options:\n"
+				"  --errormax x       maximum error accepted for validation\n"
+				"                     (default: no maximum)\n"
 				"  --eta x            eta learning rate\n"
 				"  --help             display this message and exit\n"
 				"  --input n          number of inputs\n"
@@ -243,8 +249,23 @@ int main(int argc, char **argv) {
 						}
 						printf("\n");
 					}
+
+					if (errormax >= 0) {
+						int failed = 0;
+						for (int j = 0; !failed && j < nn.outputCount; j++) {
+							failed = fabs(output[j] - nnOutput[j]) > errormax;
+						}
+						if (failed) {
+							if (!quiet) {
+								printf("Validation failure\n");
+							}
+							exit(1);
+						}
+					}
 				}
 			}
 		}
 	}
+
+	return 0;
 }
