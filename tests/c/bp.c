@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
 	char const *validationDatasetPath = NULL;
 	int obsCount = 0;
 	int verbose = 0;
+	int quiet = 0;
 
 	// count layers and decode --input
 	layerCount = 0;
@@ -119,6 +120,8 @@ int main(int argc, char **argv) {
 			}
 			NNAddLayer(&nn, nextLayerInputCount, outputCount, act);
 			nextLayerInputCount = outputCount;
+		} else if (strcmp(argv[i], "--quiet") == 0) {
+			quiet = 1;
 		} else if (strcmp(argv[i], "--training") == 0 && i + 1 < argc) {
 			trainingDatasetPath = argv[++i];
 		} else if (strcmp(argv[i], "--validation") == 0 && i + 1 < argc) {
@@ -135,6 +138,7 @@ int main(int argc, char **argv) {
 				"  --iter n           number of iterations\n"
 				"  --layer n a        layer description with number of outputs n\n"
 				"                     and activation a (\"identity\", \"tanh\" or \"sigmoid\")\n"
+				"  --quiet            suppress output\n"
 				"  --training path    dataset used for training (csv file where each row contains\n"
 				"                     the inputs and outputs of one observation)\n"
 				"  --validation path  dataset used for validation (csv file where each row contains\n"
@@ -228,15 +232,17 @@ int main(int argc, char **argv) {
 					}
 					NNEval(&nn, NULL);
 
-					printf("Expected: ");
-					for (int j = 0; j < nn.outputCount; j++) {
-						printf("%8.2f", output[j]);
+					if (!quiet) {
+						printf("Expected: ");
+						for (int j = 0; j < nn.outputCount; j++) {
+							printf("%8.2f", output[j]);
+						}
+						printf("\nNN:       ");
+						for (int j = 0; j < nn.outputCount; j++) {
+							printf("%8.2f", nnOutput[j]);
+						}
+						printf("\n");
 					}
-					printf("\nNN:       ");
-					for (int j = 0; j < nn.outputCount; j++) {
-						printf("%8.2f", nnOutput[j]);
-					}
-					printf("\n");
 				}
 			}
 		}
