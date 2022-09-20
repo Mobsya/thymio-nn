@@ -14,6 +14,23 @@
 
 // native functions
 
+AsebaNativeFunctionDescription NNNativeDescription_nngeterror = {
+    "nn.geterror",
+    "Get last error when calling an nn function (0=ok, 1=out-of-mem, 2=no nn, 3=index out of range, 4=unsuitable for hebbian rule)",
+    {
+        {1, "error"},
+        {0, NULL}
+    }
+};
+
+AsebaNativeFunctionDescription NNNativeDescription_nnreseterror = {
+    "nn.reseterror",
+    "Reset last error",
+    {
+        {0, NULL}
+    }
+};
+
 AsebaNativeFunctionDescription NNNativeDescription_nninit = {
     "nn.init",
     "Initialize neural network",

@@ -21,6 +21,12 @@ extern "C" {
 
 // configuration
 
+void NN_nngeterror(AsebaVMState *vm);
+extern AsebaNativeFunctionDescription NNNativeDescription_nngeterror;
+
+void NN_nnreseterror(AsebaVMState *vm);
+extern AsebaNativeFunctionDescription NNNativeDescription_nnreseterror;
+
 void NN_nninit(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription NNNativeDescription_nninit;
 
@@ -78,6 +84,8 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nnbackprop;
 // defines listing all native functions and their descriptions
 
 #define NN_NATIVES_DESCRIPTIONS \
+	&NNNativeDescription_nngeterror, \
+	&NNNativeDescription_nnreseterror, \
     &NNNativeDescription_nninit, \
     &NNNativeDescription_nnreset, \
     &NNNativeDescription_nnclear, \
@@ -98,6 +106,8 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nnbackprop;
 	&NNNativeDescription_nnbackprop
 
 #define NN_NATIVES_FUNCTIONS \
+	NN_nngeterror, \
+	NN_nnreseterror, \
     NN_nninit, \
     NN_nnreset, \
     NN_nnclear, \
