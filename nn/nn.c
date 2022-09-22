@@ -263,7 +263,7 @@ void NNBackPropApply(NN *nn, NNBackProp *bp, NNFloat eta) {
 void NNObservationGetPtr(NNObservations *obs, int i,
 	NNFloat **input, NNFloat **output)
 {
-	if (i > obs->maxObsCount) {
+	if (i > obs->maxCount) {
 		*input = 0;
 		*output = 0;
 	} else {

@@ -1,0 +1,38 @@
+# xor function
+
+var y
+
+# 2 layer, 2 inputs, [3 tanh,1 tanh] neurons (1 output)
+
+call nn.init(2, [3, 1], [1, 1])
+
+call nn.dataset.init(4)
+call nn.dataset.add([0, 0], 0)
+call nn.dataset.add([0, 1], 1)
+call nn.dataset.add([1, 0], 1)
+call nn.dataset.add([1, 1], 0)
+
+call nn.reset()
+call nn.backprop.dataset(2, 100, 32000)
+
+# validation
+
+call nn.setinputs([0, 0])
+call nn.eval()
+call nn.getoutputs(y)
+call test.display(y)
+
+call nn.setinputs([0, 1])
+call nn.eval()
+call nn.getoutputs(y)
+call test.display(y)
+
+call nn.setinputs([1, 0])
+call nn.eval()
+call nn.getoutputs(y)
+call test.display(y)
+
+call nn.setinputs([1, 1])
+call nn.eval()
+call nn.getoutputs(y)
+call test.display(y)

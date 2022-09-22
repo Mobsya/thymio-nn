@@ -220,7 +220,7 @@ AsebaNativeFunctionDescription NNNativeDescription_nndatasetinit = {
 	"nn.dataset.init",
 	"Initialize dataset for current neural network size",
 	{
-		{1, "max. number of observations"},
+		{1, "maximum number of observations"},
 		{0, NULL}
 	}
 };

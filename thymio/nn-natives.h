@@ -139,7 +139,8 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nnbackpropdataset;
 	NN_nnhebbianrule, \
 	NN_nnbackprop, \
 	NN_nndatasetinit, \
-	NN_nndatasetadd
+	NN_nndatasetadd, \
+	NN_nnbackpropdataset
 
 #if defined(__cplusplus)
 }

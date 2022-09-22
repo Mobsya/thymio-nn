@@ -98,15 +98,15 @@ int NNObservationsInit(NNObservations *obs, int inputCount, int outputCount,
 	if (obs->data) {
 		free((void *)obs->data);
 		obs->data = NULL;
-		obs->maxObsCount = 0;
+		obs->maxCount = 0;
 	}
 	if (outputCount > 0) {
 		obs->data = malloc((inputCount + outputCount) * maxObsCount * sizeof(NNFloat));
 		if (!obs->data) {
 			return 0;
 		}
-		obs->maxObsCount = maxObsCount;
-		obs->obsCount = 0;
+		obs->maxCount = maxObsCount;
+		obs->count = 0;
 		obs->inputCount = inputCount;
 		obs->outputCount = outputCount;
 	}
