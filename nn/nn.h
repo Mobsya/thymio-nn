@@ -53,8 +53,8 @@ typedef struct {
 } NNBackProp;
 
 typedef struct {
-	int maxObsCount;
-	int obsCount;
+	int maxCount;
+	int count;
 	int inputCount;
 	int outputCount;
 	NNFloat *data;	// block of data for input and output data

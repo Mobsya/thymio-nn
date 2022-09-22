@@ -266,7 +266,8 @@ void NNObservationGetPtr(NNObservations *obs, int i,
 	if (i > obs->maxObsCount) {
 		*input = 0;
 		*output = 0;
+	} else {
+		*input = &obs->data[i * (obs->inputCount + obs->outputCount)];
+		*output = *input + obs->inputCount;
 	}
-	*input = &obs->data[i * (obs->inputCount + obs->outputCount)];
-	*output = *input + obs->inputCount;
 }

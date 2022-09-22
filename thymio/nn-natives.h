@@ -1,12 +1,12 @@
 /*
-    Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
-    Miniature Mobile Robots group, Switzerland
-    Author: Yves Piguet
+	Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
+	Miniature Mobile Robots group, Switzerland
+	Author: Yves Piguet
 
-    Licensed under the 3-Clause BSD License;
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    https://opensource.org/licenses/BSD-3-Clause
+	Licensed under the 3-Clause BSD License;
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	https://opensource.org/licenses/BSD-3-Clause
 */
 
 #ifndef __NN_NATIVES_H
@@ -81,51 +81,61 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nnhebbianrule;
 void NN_nnbackprop(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription NNNativeDescription_nnbackprop;
 
+void NN_nndatasetinit(AsebaVMState *vm);
+extern AsebaNativeFunctionDescription NNNativeDescription_nndatasetinit;
+
+void NN_nndatasetadd(AsebaVMState *vm);
+extern AsebaNativeFunctionDescription NNNativeDescription_nndatasetadd;
+
 // defines listing all native functions and their descriptions
 
 #define NN_NATIVES_DESCRIPTIONS \
 	&NNNativeDescription_nngeterror, \
 	&NNNativeDescription_nnreseterror, \
-    &NNNativeDescription_nninit, \
-    &NNNativeDescription_nnreset, \
-    &NNNativeDescription_nnclear, \
-    &NNNativeDescription_nngetweight, \
-    &NNNativeDescription_nnsetweight, \
-    &NNNativeDescription_nngetweights, \
-    &NNNativeDescription_nnsetweights, \
-    &NNNativeDescription_nngetoffset, \
-    &NNNativeDescription_nnsetoffset, \
-    &NNNativeDescription_nngetoffsets, \
-    &NNNativeDescription_nnsetoffsets, \
-    &NNNativeDescription_nngetinputs, \
-    &NNNativeDescription_nnsetinputs, \
-    &NNNativeDescription_nngetoutputs, \
-    &NNNativeDescription_nnsetoutputs, \
-    &NNNativeDescription_nneval, \
+	&NNNativeDescription_nninit, \
+	&NNNativeDescription_nnreset, \
+	&NNNativeDescription_nnclear, \
+	&NNNativeDescription_nngetweight, \
+	&NNNativeDescription_nnsetweight, \
+	&NNNativeDescription_nngetweights, \
+	&NNNativeDescription_nnsetweights, \
+	&NNNativeDescription_nngetoffset, \
+	&NNNativeDescription_nnsetoffset, \
+	&NNNativeDescription_nngetoffsets, \
+	&NNNativeDescription_nnsetoffsets, \
+	&NNNativeDescription_nngetinputs, \
+	&NNNativeDescription_nnsetinputs, \
+	&NNNativeDescription_nngetoutputs, \
+	&NNNativeDescription_nnsetoutputs, \
+	&NNNativeDescription_nneval, \
 	&NNNativeDescription_nnhebbianrule, \
-	&NNNativeDescription_nnbackprop
+	&NNNativeDescription_nnbackprop, \
+	&NNNativeDescription_nndatasetinit, \
+	&NNNativeDescription_nndatasetadd
 
 #define NN_NATIVES_FUNCTIONS \
 	NN_nngeterror, \
 	NN_nnreseterror, \
-    NN_nninit, \
-    NN_nnreset, \
-    NN_nnclear, \
-    NN_nngetweight, \
-    NN_nnsetweight, \
-    NN_nngetweights, \
-    NN_nnsetweights, \
-    NN_nngetoffset, \
-    NN_nnsetoffset, \
-    NN_nngetoffsets, \
-    NN_nnsetoffsets, \
-    NN_nngetinputs, \
-    NN_nnsetinputs, \
-    NN_nngetoutputs, \
-    NN_nnsetoutputs, \
-    NN_nneval, \
+	NN_nninit, \
+	NN_nnreset, \
+	NN_nnclear, \
+	NN_nngetweight, \
+	NN_nnsetweight, \
+	NN_nngetweights, \
+	NN_nnsetweights, \
+	NN_nngetoffset, \
+	NN_nnsetoffset, \
+	NN_nngetoffsets, \
+	NN_nnsetoffsets, \
+	NN_nngetinputs, \
+	NN_nnsetinputs, \
+	NN_nngetoutputs, \
+	NN_nnsetoutputs, \
+	NN_nneval, \
 	NN_nnhebbianrule, \
-	NN_nnbackprop
+	NN_nnbackprop, \
+	NN_nndatasetinit, \
+	NN_nndatasetadd
 
 #if defined(__cplusplus)
 }

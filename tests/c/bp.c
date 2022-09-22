@@ -1,12 +1,12 @@
 /*
-    Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
-    Miniature Mobile Robots group, Switzerland
-    Author: Yves Piguet
+	Copyright 2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
+	Miniature Mobile Robots group, Switzerland
+	Author: Yves Piguet
 
-    Licensed under the 3-Clause BSD License;
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    https://opensource.org/licenses/BSD-3-Clause
+	Licensed under the 3-Clause BSD License;
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	https://opensource.org/licenses/BSD-3-Clause
 */
 
 // test of nn implementation: learning with backpropagation
@@ -38,9 +38,9 @@ static int countFileLines(char const *path) {
 	return count;
 }
 
-static int loadCSV(char const *path, NNObservations *obs) {
+static void loadCSV(char const *path, NNObservations *obs) {
 	double x;
-	int obsCount, i;
+	int i;
 	NNFloat *input, *output;
 
 	FILE *fp = fopen(path, "r");
@@ -49,17 +49,17 @@ static int loadCSV(char const *path, NNObservations *obs) {
 		exit(1);
 	}
 
-	for (obsCount = i = 0;;) {
+	for (obs->count = i = 0;;) {
 		int r = fscanf(fp, "%lf,", &x);
 		if (r == 1) {
-			NNObservationGetPtr(obs, obsCount, &input, &output);
+			NNObservationGetPtr(obs, obs->count, &input, &output);
 			if (i < obs->inputCount) {
 				input[i++] = (NNFloat)x;
 			} else {
 				output[i++ - obs->inputCount] = (NNFloat)x;
 				if (i >= obs->inputCount + obs->outputCount) {
 					i = 0;
-					obsCount++;
+					obs->count++;
 				}
 			}
 		} else {
@@ -68,7 +68,6 @@ static int loadCSV(char const *path, NNObservations *obs) {
 	}
 
 	fclose(fp);
-	return obsCount;
 }
 
 int main(int argc, char **argv) {
@@ -177,28 +176,28 @@ int main(int argc, char **argv) {
 		obsCount = countFileLines(trainingDatasetPath);
 		if (obsCount > 0) {
 			NNObservationsInit(&obs, nn.inputCount, nn.outputCount, obsCount);
-			obsCount = loadCSV(trainingDatasetPath, &obs);
+			loadCSV(trainingDatasetPath, &obs);
 			if (verbose) {
-				printf("Size of dataset used for training: %d\n", obsCount);
+				printf("Size of dataset used for training: %d\n", obs.count);
 				printf("Number of steps for training: %d\n", maxIter);
 				printf("Learning rate eta: %g\n", eta);
 			}
 			NNFloat costInitial = 0;
 			NNFloat costFinal = 0;
-			if (obsCount > 0) {
+			if (obs.count > 0) {
 				for (int i = 0; i < maxIter; i++) {
 					NNFloat *input, *output;
-					NNObservationGetPtr(&obs, i % obsCount, &input, &output);
+					NNObservationGetPtr(&obs, i % obs.count, &input, &output);
 
 					NNFloat *nnInput = NNGetInputPtr(&nn);
 					NNFloat *nnOutput = NNGetOutputPtr(&nn);
 					for (int j = 0; j < nn.inputCount; j++) {
 						nnInput[j] = input[j];
 					}
-					if (i < obsCount) {
+					if (i < obs.count) {
 						NNEval(&nn, NULL);
 						costInitial += NNBackPropCost(&nn, output);
-					} else if (i >= (maxIter / obsCount - 1) * obsCount && i < (maxIter / obsCount) * obsCount) {
+					} else if (i >= (maxIter / obs.count - 1) * obs.count && i < (maxIter / obs.count) * obs.count) {
 						NNEval(&nn, NULL);
 						costFinal += NNBackPropCost(&nn, output);
 					}
@@ -222,12 +221,12 @@ int main(int argc, char **argv) {
 		obsCount = countFileLines(validationDatasetPath);
 		if (obsCount > 0) {
 			NNObservationsInit(&obs, nn.inputCount, nn.outputCount, obsCount);
-			obsCount = loadCSV(validationDatasetPath, &obs);
+			loadCSV(validationDatasetPath, &obs);
 			if (verbose) {
-				printf("\nSize of dataset used for validation: %d\n", obsCount);
+				printf("\nSize of dataset used for validation: %d\n", obs.count);
 			}
-			if (obsCount > 0) {
-				for (int i = 0; i < obsCount; i++) {
+			if (obs.count > 0) {
+				for (int i = 0; i < obs.count; i++) {
 					NNFloat *input, *output;
 					NNObservationGetPtr(&obs, i, &input, &output);
 
