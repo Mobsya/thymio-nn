@@ -385,3 +385,37 @@ void NN_nndatasetadd(AsebaVMState *vm) {
 		obs.count++;
 	}
 }
+
+void NN_nnbackpropdataset(AsebaVMState *vm) {
+	if (nn.layerCount == 0) {
+		error = NNErrorNoNN;
+	} else if (!NNBackPropAllocStorage(&nn, &backpropTempMem)) {
+		error = NNErrorOutOfMemory;
+	} else {
+		int16_t const etanum = vm->variables[AsebaNativePopArg(vm)];
+		int16_t const etaden = vm->variables[AsebaNativePopArg(vm)];
+		NNFloat eta = (NNFloat)etanum / etaden;
+		int16_t const numIter = vm->variables[AsebaNativePopArg(vm)];
+		if (NNBackPropInit(&nn, &bp, backpropTempMem)) {
+			for (int i = 0; i < numIter; i++) {
+				for (int j = 0; j < obs.count; j++) {
+					NNFloat *input, *output;
+					NNObservationGetPtr(&obs, j, &input, &output);
+
+					NNFloat *nnInput = NNGetInputPtr(&nn);
+					NNFloat *nnOutput = NNGetOutputPtr(&nn);
+					for (int k = 0; k < nn.inputCount; k++) {
+						nnInput[k] = input[k];
+					}
+					for (int k = 0; k < nn.outputCount; k++) {
+						nnOutput[k] = output[k];
+					}
+
+					NNBackPropResetGradients(&nn, &bp);
+					NNBackPropAddGradients(&nn, &bp);
+					NNBackPropApply(&nn, &bp, eta);
+				}
+			}
+		}
+	}
+}

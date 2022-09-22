@@ -87,6 +87,9 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nndatasetinit;
 void NN_nndatasetadd(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription NNNativeDescription_nndatasetadd;
 
+void NN_nnbackpropdataset(AsebaVMState *vm);
+extern AsebaNativeFunctionDescription NNNativeDescription_nnbackpropdataset;
+
 // defines listing all native functions and their descriptions
 
 #define NN_NATIVES_DESCRIPTIONS \
@@ -111,7 +114,8 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nndatasetadd;
 	&NNNativeDescription_nnhebbianrule, \
 	&NNNativeDescription_nnbackprop, \
 	&NNNativeDescription_nndatasetinit, \
-	&NNNativeDescription_nndatasetadd
+	&NNNativeDescription_nndatasetadd, \
+	&NNNativeDescription_nnbackpropdataset
 
 #define NN_NATIVES_FUNCTIONS \
 	NN_nngeterror, \

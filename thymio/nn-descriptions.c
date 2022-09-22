@@ -234,3 +234,14 @@ AsebaNativeFunctionDescription NNNativeDescription_nndatasetadd = {
 		{0, NULL}
 	}
 };
+
+AsebaNativeFunctionDescription NNNativeDescription_nnbackpropdataset = {
+	"nn.backprop.dataset",
+	"Use dataset to learn with back-propagation",
+	{
+		{1, "etanum"},
+		{1, "etaden"},
+		{1, "number of iterations over the whole dataset"},
+		{0, NULL}
+	}
+};
