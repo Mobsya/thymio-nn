@@ -12,8 +12,8 @@
 #include "nn-natives.h"
 #include "common/consts.h"
 
-#include "nn/nn.h"
-#include "nn/nn-alloc.h"
+#include "../nn/nn.h"
+#include "../nn/nn-alloc.h"
 #include <math.h>
 
 // single neural network
