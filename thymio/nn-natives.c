@@ -280,7 +280,7 @@ void NN_nngetinputs(AsebaVMState *vm) {
 	if (nn.layerCount > 0) {
 		NNLayer *layer0 = &nn.layer[0];
 		for (int i = 0; i < layer0->inputCount && i < length; i++) {
-			inputs[i] = round(layer0->input[i]);
+			inputs[i] = (int16_t)round(layer0->input[i]);
 		}
 	} else {
 		error = NNErrorNoNN;
