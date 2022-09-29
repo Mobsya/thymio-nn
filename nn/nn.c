@@ -15,10 +15,10 @@
 
 // uniform pseudorandom number between - and + amplitude
 static NNFloat prand(NNFloat amplitude) {
-#ifdef __linux__
-	return (random() - 0x40000000l) * (amplitude / 0x40000000);
-#else
+#ifdef __APPLE__
 	return (int32_t)(arc4random() ^ 0x80000000) * (amplitude / 0x80000000);
+#else
+	return (random() - 0x40000000l) * (amplitude / 0x40000000);
 #endif
 }
 
