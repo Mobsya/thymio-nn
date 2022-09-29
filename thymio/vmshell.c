@@ -1,12 +1,12 @@
 /*
-    Copyright 2017-2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
-    Miniature Mobile Robots group, Switzerland
-    Author: Yves Piguet
+	Copyright 2017-2022 ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE,
+	Miniature Mobile Robots group, Switzerland
+	Author: Yves Piguet
 
-    Licensed under the 3-Clause BSD License;
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    https://opensource.org/licenses/BSD-3-Clause
+	Licensed under the 3-Clause BSD License;
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	https://opensource.org/licenses/BSD-3-Clause
 */
 
 // Simple shell for Aseba VM
@@ -31,8 +31,8 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8_t* data, uint16_t length)
 {
 }
 
-int AsebaHandleDeviceInfoMessages(AsebaVMState*, uint16_t, uint16_t*, uint16_t) {
-    return 1;
+int AsebaHandleDeviceInfoMessages(AsebaVMState *vm, uint16_t id, uint16_t *data, uint16_t dataLength) {
+	return 1;
 }
 
 uint16_t AsebaGetBuffer(AsebaVMState *vm, uint8_t* data, uint16_t maxLength, uint16_t* source)
