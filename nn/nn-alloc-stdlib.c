@@ -11,7 +11,84 @@
 
 #include "nn.h"
 #include "nn-alloc.h"
-#include <stdlib.h>
+
+#if defined(STATICALLOC)
+
+/*
+Simple implementation of malloc and free in a static block of memory of size STATICALLOC.
+int mem[] contains compact blocks. Block at int *p is free or allocated. Free blocks
+have p[0] = -size, allocated blocks have p[0] = +size; both kinds are followed by
+size ints.
+*/
+
+#define TOTALSIZEINT (int)(STATICALLOC / sizeof(int))
+
+static int mem[TOTALSIZEINT];
+static int memInitialized = 0;
+
+#if !defined(NULL)
+#	define NULL 0
+#endif
+
+#define malloc static_malloc
+#define free static_free
+
+static void *static_malloc(int n) {
+	if (!memInitialized) {
+		// initialization the first time malloc is called
+		mem[0] = 1 - TOTALSIZEINT;
+		memInitialized = 1;
+	}
+
+	// find a free block large enough
+	for (int i = 0;
+		i < TOTALSIZEINT;
+		i += 1 + (mem[i] < 0 ? -mem[i] : mem[i])) {
+		// merge free blocks
+		while (mem[i] < 0
+			&& i + 1 - mem[i] < TOTALSIZEINT
+			&& mem[i + 1 - mem[i]] < 0) {
+			mem[i] += mem[i + 1 - mem[i]] - 1;
+		}
+
+		// allocate if possible
+		if (mem[i] < 0 && mem[i] * sizeof(int) >= n) {
+			// free block large enough
+			void *p = (void *)&mem[i + 1];
+			if (2 - mem[i] < n * sizeof(int)) {
+				// no room for another free block
+				mem[i] = -mem[i];
+			} else {
+				// room for another free block
+				int ni = (n + sizeof(int) - 1) / sizeof(int);
+				mem[i + 1 + ni] = -(-mem[i] - 1 - ni);
+				mem[i] = ni;
+			}
+printf("malloc -> %x\n", (int)p);
+			return p;
+		}
+	}
+
+	// no free block is large enough
+	return NULL;
+}
+
+static void static_free(void *p) {
+	if (!p) {
+		return;
+	}
+
+	// index in mem of the size before the allocated block
+	int i = (int *)p - 1 - mem;
+
+	// deallocate block
+printf("free %x\n", (int)p);
+	mem[i] = -mem[i];
+}
+
+#else
+#	include <stdlib.h>
+#endif
 
 // reset nn to empty, returning 1 for success or 0 for failure
 int NNReset(NN *nn, int maxLayerCount) {
@@ -22,8 +99,10 @@ int NNReset(NN *nn, int maxLayerCount) {
 		}
 	}
 
-	free(nn->layer);
-	nn->layer = 0;
+	if (nn->layer) {
+		free(nn->layer);
+		nn->layer = 0;
+	}
 
 	nn->maxLayerCount = 0;
 	nn->layerCount = 0;

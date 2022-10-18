@@ -9,13 +9,14 @@
 
 
 .PHONY: all
-all: vmshell test-nn-backprop test-nn-xor
+all: vmshell test-nn-backprop test-nn-xor test-nn-xor-static
 
 CFLAGS = -g -I. -Iaseba -Ithymio
 CXXFLAGS = -g -I. -Iaseba
 
 vpath %.c aseba/vm:aseba/transport/buffer:aseba/compiler:thymio:nn:tests/c
 vpath %.cpp aseba/vm:aseba/compiler:aseba/common/utils:aseba/common/msg:thymio
+vpath %.h nn
 
 vmobj = vm.o vm-buffer.o
 vmnnobj = nn.o nn-alloc-stdlib.o nn-descriptions.o nn-natives.o
@@ -32,6 +33,12 @@ test-nn-backprop: nn.o nn-alloc-stdlib.o bp.o
 
 test-nn-xor: nn.o nn-alloc-stdlib.o xor.o
 	$(CC) -g -o $@ $^ -lm
+
+test-nn-xor-static: nn.o nn-alloc-static.o xor.o
+	$(CC) -g -o $@ $^ -lm
+
+nn-alloc-static.o: nn-alloc-stdlib.c nn-alloc.h
+	$(CC) -c $(CFLAGS) -DSTATICALLOC=200000 -o $@ $<
 
 .PHONY: tests
 tests: test-nn-backprop

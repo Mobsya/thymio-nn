@@ -6,4 +6,8 @@ trap 'if [ "$?" -ne 0 ]; then echo Failure; else echo Ok; fi' EXIT
 python3 tests/scripts/testsim.py tests/aseba/test-eval.aseba tests/aseba/test-eval.expected-output >/dev/null
 python3 tests/scripts/testsim.py tests/aseba/test-bp.aseba tests/aseba/test-bp.expected-output >/dev/null
 
+# ignore results, just check there is no crash which would likely come from memory allocation
+./test-nn-xor >/dev/null
+./test-nn-xor-static >/dev/null
+
 ./test-nn-backprop --input 2 --layer 3 tanh --layer 1 tanh --training tests/datasets/xor.csv --iter 100000 --validation tests/datasets/xor.csv --errormax 0.05 --quiet
