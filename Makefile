@@ -9,7 +9,7 @@
 
 
 .PHONY: all
-all: vmshell test-nn-backprop test-nn-xor test-nn-xor-static
+all: vmshell test-nn-backprop test-nn-xor test-staticalloc test-nn-xor-static
 
 CFLAGS = -g -I. -Iaseba -Ithymio
 CXXFLAGS = -g -I. -Iaseba
@@ -34,8 +34,11 @@ test-nn-backprop: nn.o nn-alloc-stdlib.o bp.o
 test-nn-xor: nn.o nn-alloc-stdlib.o xor.o
 	$(CC) -g -o $@ $^ -lm
 
-test-nn-xor-static: nn.o nn-alloc-static.o xor.o
+test-nn-xor-static: nn.o nn-alloc-static.o staticalloc.o xor.o
 	$(CC) -g -o $@ $^ -lm
+
+test-staticalloc: staticalloc.o staticmem.o
+	$(CC) -g -o $@ $^
 
 nn-alloc-static.o: nn-alloc-stdlib.c nn-alloc.h
 	$(CC) -c $(CFLAGS) -DSTATICALLOC=200000 -o $@ $<
