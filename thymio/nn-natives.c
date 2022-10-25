@@ -102,7 +102,7 @@ void NN_nninit(AsebaVMState *vm) {
 			vm->variables[outputCountAddr + i],
 			vm->variables[activationCodeAddr + i] == 1 ? NNActivationTanh
 				: vm->variables[activationCodeAddr + i] == 2 ? NNActivationSigmoid
-				: NNActivationNoop)) {
+				: NNActivationIdentity)) {
 			error = NNErrorOutOfMemory;
 			return;
 		}
@@ -334,7 +334,7 @@ void NN_nneval(AsebaVMState *vm) {
 }
 
 void NN_nnhebbianrule(AsebaVMState *vm) {
-	if (nn.layerCount == 1 && nn.layer[0].activation == NNActivationNoop) {
+	if (nn.layerCount == 1 && nn.layer[0].activation == NNActivationIdentity) {
 		int16_t const alphanum = vm->variables[AsebaNativePopArg(vm)];
 		int16_t const alphaden = vm->variables[AsebaNativePopArg(vm)];
 		NNHebbianRuleStep(&nn, 0, (NNFloat)alphanum / alphaden);

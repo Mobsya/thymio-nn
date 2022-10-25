@@ -9,7 +9,9 @@
 
 
 .PHONY: all
-all: vmshell test-nn-backprop test-nn-xor test-staticalloc test-nn-xor-static
+all: vmshell \
+	test-nn-reinf test-nn-backprop test-nn-xor \
+	test-staticalloc test-nn-xor-static
 
 CFLAGS = -g -I. -Iaseba -Ithymio
 CXXFLAGS = -g -I. -Iaseba
@@ -27,6 +29,9 @@ vmshell: vmshell.o compHelper.o disassembler.o $(vmobj) $(compobj) $(vmnnobj)
 
 disassembler.o: disassembler.cpp
 	$(CXX) $(CXXFLAGS) -DUSE_COMPILER -c -o $@ $<
+
+test-nn-reinf: nn.o nn-alloc-stdlib.o reinf.o
+	$(CC) -g -o $@ $^ -lm
 
 test-nn-backprop: nn.o nn-alloc-stdlib.o bp.o
 	$(CC) -g -o $@ $^ -lm

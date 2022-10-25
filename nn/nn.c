@@ -104,7 +104,7 @@ void NNEval(NN *nn, NNFloat **P) {
 			case NNActivationSigmoid:
 				p = (1 + tanh(p / 2)) / 2;
 				break;
-			case NNActivationNoop:
+			case NNActivationIdentity:
 			default:
 				break;
 			}
@@ -222,7 +222,7 @@ void NNBackPropAddGradients(NN *nn, NNBackProp *bp) {
 				bp->Bg[k][i] = bp->E[i] * sigmoidder(bp->P[k][i]);
 			}
 			break;
-		case NNActivationNoop:
+		case NNActivationIdentity:
 		default:
 			// phi' = 1
 			for (int i = 0; i < layer->outputCount; i++) {

@@ -19,7 +19,7 @@ extern "C" {
 typedef float NNFloat;
 
 typedef enum {
-	NNActivationNoop = 0,
+	NNActivationIdentity = 0,
 	NNActivationTanh,
 	NNActivationSigmoid
 } NNActivation;

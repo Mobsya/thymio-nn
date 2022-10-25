@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
 		} else if (strcmp(argv[i], "--layer") == 0 && i + 2 < argc) {
 			int outputCount = strtol(argv[++i], NULL, 0);
 			i++;
-			NNActivation act = NNActivationNoop;
+			NNActivation act = NNActivationIdentity;
 			if (strcmp(argv[i], "tanh") == 0) {
 				act = NNActivationTanh;
 			} else if (strcmp(argv[i], "sigmoid") == 0) {
@@ -162,7 +162,7 @@ int main(int argc, char **argv) {
 		for (int k = 0; k < nn.layerCount; k++) {
 			printf("  in=%d out=%d %s\n",
 				nn.layer[k].inputCount, nn.layer[k].outputCount,
-				nn.layer[k].activation == NNActivationNoop ? "identity" : nn.layer[k].activation == NNActivationTanh ? "tanh" : nn.layer[k].activation == NNActivationSigmoid ? "sigmoid" : "???");
+				nn.layer[k].activation == NNActivationIdentity ? "identity" : nn.layer[k].activation == NNActivationTanh ? "tanh" : nn.layer[k].activation == NNActivationSigmoid ? "sigmoid" : "???");
 		}
 		printf("\n");
 	}
