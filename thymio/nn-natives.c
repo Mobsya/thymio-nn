@@ -111,6 +111,12 @@ void NN_nninit(AsebaVMState *vm) {
 	NNInitWeights(&nn);
 }
 
+void NN_nnfree(AsebaVMState *vm) {
+	NNReset(&nn, 0);
+	NNBackPropAllocStorage(NULL, &backpropTempMem);
+	NNObservationsInit(&obs, 0, 0, 0);
+}
+
 void NN_nnreset(AsebaVMState *vm) {
 	NNInitWeights(&nn);
 }

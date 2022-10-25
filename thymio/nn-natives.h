@@ -30,6 +30,9 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nnreseterror;
 void NN_nninit(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription NNNativeDescription_nninit;
 
+void NN_nnfree(AsebaVMState *vm);
+extern AsebaNativeFunctionDescription NNNativeDescription_nnfree;
+
 void NN_nnreset(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription NNNativeDescription_nnreset;
 
@@ -96,6 +99,7 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nnbackpropdataset;
 	&NNNativeDescription_nngeterror, \
 	&NNNativeDescription_nnreseterror, \
 	&NNNativeDescription_nninit, \
+	&NNNativeDescription_nnfree, \
 	&NNNativeDescription_nnreset, \
 	&NNNativeDescription_nnclear, \
 	&NNNativeDescription_nngetweight, \
@@ -121,6 +125,7 @@ extern AsebaNativeFunctionDescription NNNativeDescription_nnbackpropdataset;
 	NN_nngeterror, \
 	NN_nnreseterror, \
 	NN_nninit, \
+	NN_nnfree, \
 	NN_nnreset, \
 	NN_nnclear, \
 	NN_nngetweight, \

@@ -42,6 +42,14 @@ AsebaNativeFunctionDescription NNNativeDescription_nninit = {
 	}
 };
 
+AsebaNativeFunctionDescription NNNativeDescription_nnfree = {
+	"nn.free",
+	"Free memory allocated for neural network (optional)",
+	{
+		{0, NULL}
+	}
+};
+
 AsebaNativeFunctionDescription NNNativeDescription_nnreset = {
 	"nn.reset",
 	"Reset neural network weights (random) and offsets (zero)",
